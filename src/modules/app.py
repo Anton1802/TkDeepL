@@ -64,8 +64,8 @@ class App(tk.Tk):
             text="Translate", 
             command=async_handler(self.translate)
         )
-        self.fr_text = tk.Text()
-        self.to_text = tk.Text()
+        self.fr_text = tk.Text(wrap="word")
+        self.to_text = tk.Text(wrap="word")
 
         self.fr_label.pack(anchor="nw", side="left", padx=20, pady=10)
         self.to_label.pack(anchor="ne", side="right", padx=20, pady=10)
