@@ -1,10 +1,6 @@
-from deepl import DeepL
-import asyncio
+from modules.app import App
+from libs.async_tkinter_loop import async_mainloop
 
-async def main():
-    t = DeepL("ru", "en")
-    translate_text = await t.translate("Здравствуйте")
-    print(translate_text)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    async_mainloop(App(), title="TkDeepL")
