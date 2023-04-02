@@ -54,7 +54,7 @@ class App(tk.Tk):
         self.to_label = ttk.Combobox(values=list(self.to_languages.keys()), textvariable=self.to_language)
         self.translating_label = tk.Label(text="Translating...")
 
-        self.btn_languge_reverse = tk.Button(
+        self.btn_language_reverse = tk.Button(
             self, 
             text="<--->",
             command=async_handler(self.reverse_language)
@@ -69,7 +69,7 @@ class App(tk.Tk):
 
         self.fr_label.pack(anchor="nw", side="left", padx=20, pady=10)
         self.to_label.pack(anchor="ne", side="right", padx=20, pady=10)
-        self.btn_languge_reverse.pack(anchor="n", side="top", pady=5, fill="x")
+        self.btn_language_reverse.pack(anchor="n", side="top", pady=5, fill="x")
         self.fr_text.place(anchor="w", relx=0.012, rely=0.35, relwidth=0.45, relheight=0.4)
         self.to_text.place(anchor="e", relx=0.989, rely=0.35, relwidth=0.45, relheight=0.4)
         self.btn_translate.pack(anchor="s", side="bottom", expand=True, fill="x", pady=100)
@@ -83,7 +83,7 @@ class App(tk.Tk):
         else:
             messagebox.showerror(
                 "Error",
-                "You cannot set a translatable language in Auto!"
+                "You cannot set a translatable language in auto!"
             )
 
     async def translate(self):
