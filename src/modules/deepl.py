@@ -71,7 +71,7 @@ class DeepL:
                     await asyncio.get_event_loop().run_in_executor(None, install, p.chromium)
                     browser = await self.__get_browser(p)
                 else:
-                    raise        
+                    raise       
 
             page = await browser.new_page()
             page.set_default_timeout(self.timeout)
@@ -94,7 +94,7 @@ class DeepL:
                 await page.wait_for_function(
                     """
                     () => document.querySelector(
-                    'd-textarea[dl-test=translator-target-input]')?.value?.length > 0
+                    'd-textarea[data-testid=translator-target-input]')?.value?.length > 0
                 """,
                 )
             except PlaywrightError as e:
