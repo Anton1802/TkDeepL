@@ -1,8 +1,8 @@
 # TkDeepL
 This is a simple client on Linux, for translator DeepL.
-# Advantages
+## Advantages
 - Simple
 - Without API
-# Disadvantages
+## Disadvantages
 - Slow
-# Screenshots
+## Screenshots
