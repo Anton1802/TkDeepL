@@ -8,5 +8,5 @@ This is a simple client on Linux, for translator DeepL.
 ## Screenshots
 ### Menu:
 ![Menu:](/images_repo/screen1.png)
-### Translation process
+### Translation process:
 ![Translation process:](/images_repo/screen2.png)
