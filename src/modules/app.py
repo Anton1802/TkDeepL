@@ -4,7 +4,7 @@ from tkinter import messagebox
 from modules.deepl import DeepL
 import asyncio
 from libs.async_tkinter_loop import async_handler
-from languages import language
+from .languages import Language
 
 class TextFieldNull(Exception):
     pass
@@ -53,7 +53,7 @@ class App(tk.Tk):
         self.progress_bar_value = tk.IntVar(value=0)
         self.fr_label = ttk.Combobox(values=list(self.fr_languages.keys()), textvariable=self.fr_language)
         self.to_label = ttk.Combobox(values=list(self.to_languages.keys()), textvariable=self.to_language)
-        self.translating_label = tk.Label(text=language['translating'])
+        self.translating_label = tk.Label(text=Language.language['translating'])
 
         self.btn_language_reverse = tk.Button(
             self, 
@@ -62,12 +62,12 @@ class App(tk.Tk):
         )
         self.btn_translate = tk.Button(
             self, 
-            text=language['button_translate'], 
+            text=Language.language['button_translate'], 
             command=async_handler(self.translate)
         )
         self.btn_switch_language = tk.Button(
             self,
-            text=language['button_switch_lang'],
+            text=Language.language['button_switch_lang'],
             command=async_handler(self.switch_language)
         )
 
@@ -90,8 +90,8 @@ class App(tk.Tk):
             self.to_language.set(temp)
         else:
             messagebox.showerror(
-                language['error'],
-                language['error_valid_lang']
+                Language.language['error'],
+                Language.language['error_valid_lang']
             )
 
     async def translate(self):
@@ -103,8 +103,8 @@ class App(tk.Tk):
                 raise TextFieldNull
         except TextFieldNull:
             messagebox.showerror(
-                language['error'], 
-                language['error_input']
+                Language.language['error'], 
+                Language.language['error_input']
                 )
             return
 
