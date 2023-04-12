@@ -28,18 +28,27 @@ class Language:
     }
 
     def __init__(self) -> None:
-        self.languages = {
+        self.__languages = {
             'en': self.__language_en,
             'ru': self.__language_ru
         }
-        self.selected_language = None
+        self.__selected_language = None
 
     def set_language(self, language: str) -> None:
-        if language in self.languages.keys():
-            self.selected_language = language
+        if language in self.__languages.keys():
+            self.__selected_language = language
 
     def get_string(self, translate_key: str) -> str | None:
-        if translate_key in self.languages[self.selected_language]:
-            return self.languages[self.selected_language][translate_key]
+        if translate_key in self.__languages[self.__selected_language]:
+            return self.__languages[self.__selected_language][translate_key]
         else: 
             return 
+        
+    def get_select_language(self) -> str | None:
+        if self.__selected_language is not None:
+            return self.__selected_language
+        else:
+            return
+        
+    def get_languages(self) -> tuple:
+        return tuple(self.__languages.keys())

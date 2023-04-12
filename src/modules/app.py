@@ -6,9 +6,6 @@ import asyncio
 from libs.async_tkinter_loop import async_handler
 from .languages import Language
 
-multi_translator = Language()
-multi_translator.set_language('ru')
-
 class TextFieldNull(Exception):
     pass
 
@@ -51,12 +48,15 @@ class App(tk.Tk):
         super().__init__()
         self.geometry("640x480")
 
+        self.multi_translator = Language()
+        self.multi_translator.set_language("en")
+
         self.fr_language = tk.StringVar(value="Auto")
         self.to_language = tk.StringVar(value="English")
         self.progress_bar_value = tk.IntVar(value=0)
         self.fr_label = ttk.Combobox(values=list(self.fr_languages.keys()), textvariable=self.fr_language)
         self.to_label = ttk.Combobox(values=list(self.to_languages.keys()), textvariable=self.to_language)
-        self.translating_label = tk.Label(text=multi_translator.get_string('translating'))
+        self.translating_label = tk.Label(text=self.multi_translator.get_string('translating'))
 
         self.btn_language_reverse = tk.Button(
             self, 
@@ -65,12 +65,12 @@ class App(tk.Tk):
         )
         self.btn_translate = tk.Button(
             self, 
-            text=multi_translator.get_string('button_translate'), 
+            text=self.multi_translator.get_string('button_translate'), 
             command=async_handler(self.translate)
         )
         self.btn_switch_language = tk.Button(
             self,
-            text=multi_translator.get_string('button_switch_lang'),
+            text=self.multi_translator.get_string('button_switch_lang'),
             command=async_handler(self.switch_language)
         )
 
@@ -83,7 +83,7 @@ class App(tk.Tk):
         self.fr_text.place(anchor="w", relx=0.012, rely=0.35, relwidth=0.45, relheight=0.4)
         self.to_text.place(anchor="e", relx=0.989, rely=0.35, relwidth=0.45, relheight=0.4)
         self.btn_translate.pack(anchor="s", side="bottom", expand=True, fill="x", pady=100)
-        self.btn_switch_language.place(x=552, y=452)
+        self.btn_switch_language.place(anchor="se", relx=1, rely=1)
 
     async def reverse_language(self):
         temp = self.fr_language.get()
@@ -93,8 +93,8 @@ class App(tk.Tk):
             self.to_language.set(temp)
         else:
             messagebox.showerror(
-                multi_translator.get_string('error'),
-                multi_translator.get_string('error_valid_lang')
+                self.multi_translator.get_string('error'),
+                self.multi_translator.get_string('error_auto')
             )
 
     async def translate(self):
@@ -106,8 +106,8 @@ class App(tk.Tk):
                 raise TextFieldNull
         except TextFieldNull:
             messagebox.showerror(
-                multi_translator.get_string('error'), 
-                multi_translator.get_string('error_input')
+                self.multi_translator.get_string('error'), 
+                self.multi_translator.get_string('error_input')
                 )
             return
 
@@ -143,4 +143,15 @@ class App(tk.Tk):
             await asyncio.sleep(1)
 
     async def switch_language(self):
-        pass
+        continue_switch = None
+
+        for language in self.multi_translator.get_languages():
+            if language != self.multi_translator.get_select_language():
+                continue_switch = language
+                break
+
+        self.multi_translator.set_language(language)
+        
+        self.translating_label.config(text=self.multi_translator.get_string('translating'))
+        self.btn_translate.config(text=self.multi_translator.get_string('button_translate'))
+        self.btn_switch_language.config(text=self.multi_translator.get_string('button_switch_lang'))
