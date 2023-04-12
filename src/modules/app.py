@@ -5,6 +5,7 @@ from modules.deepl import DeepL
 import asyncio
 from libs.async_tkinter_loop import async_handler
 from .languages import Language
+from modules.deepl import DeepLPageError
 
 class TextFieldNull(Exception):
     pass
@@ -127,8 +128,13 @@ class App(tk.Tk):
         self.translating_label.place(anchor="center", relx=0.5, rely=0.65)
 
         task = asyncio.create_task(self.activate_progress_bar(timeout_ms))
-        translate_text = await t.translate(input_text_field)
-        self.to_text.insert(1.0, translate_text)
+
+        try:
+            translate_text = await t.translate(input_text_field)
+        except DeepLPageError as e:
+            messagebox.showerror("Error", f"{e}")
+        else:  
+            self.to_text.insert(1.0, translate_text)
 
         self.translating_label.place_forget()
         self.progress_bar_translate.place_forget()

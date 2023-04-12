@@ -81,10 +81,9 @@ class DeepL:
                 "**/*",
                 lambda route: route.abort() if route.request.resource_type in excluded_resources else route.continue_(),
             )
-
-            await page.goto(f"https://www.deepl.com/en/translator#{self.fr_lang}/{self.to_lang}/{string}")
-
+            
             try:
+                await page.goto(f"https://www.deepl.com/en/translator#{self.fr_lang}/{self.to_lang}/{string}")
                 page.get_by_role("main")
             except PlaywrightError as e:
                 msg = f"Maybe Time limit exceeded. ({self.timeout} ms)"
