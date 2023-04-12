@@ -132,7 +132,7 @@ class App(tk.Tk):
         try:
             translate_text = await t.translate(input_text_field)
         except DeepLPageError as e:
-            messagebox.showerror("Error", f"{e}")
+            messagebox.showerror("Error", self.multi_translator.get_string("error_limit"))
         else:  
             self.to_text.insert(1.0, translate_text)
 
