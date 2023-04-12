@@ -9,6 +9,7 @@ en = {
     "button_translate": "Translate",
     "install": "Install",
     "install_browser": "Installing browser executable. This may take some time",
+    "button_switch_lang": "Switch lang"
 }
 
 ru = {
@@ -21,7 +22,8 @@ ru = {
     "error_limit": "Лимит времени превышен.",
     "button_translate": "Перевести",
     "install": "Загрузка",
-    "install_browser": "Установка исполняемого файла браузера. Это может занять некоторое врем",
+    "install_browser": "Установка исполняемого файла браузера. Это может занять некоторое время",
+    "button_switch_lang": "Сменить язык"
 }
 
 

@@ -65,6 +65,12 @@ class App(tk.Tk):
             text=language['button_translate'], 
             command=async_handler(self.translate)
         )
+        self.btn_switch_language = tk.Button(
+            self,
+            text=language['button_switch_lang'],
+            command=async_handler(self.switch_language)
+        )
+
         self.fr_text = tk.Text(wrap="word")
         self.to_text = tk.Text(wrap="word")
 
@@ -74,6 +80,7 @@ class App(tk.Tk):
         self.fr_text.place(anchor="w", relx=0.012, rely=0.35, relwidth=0.45, relheight=0.4)
         self.to_text.place(anchor="e", relx=0.989, rely=0.35, relwidth=0.45, relheight=0.4)
         self.btn_translate.pack(anchor="s", side="bottom", expand=True, fill="x", pady=100)
+        self.btn_switch_language.place(x=552, y=452)
 
     async def reverse_language(self):
         temp = self.fr_language.get()
@@ -132,3 +139,8 @@ class App(tk.Tk):
             self.progress_bar_value.set(value)
             await asyncio.sleep(1)
 
+    async def switch_language(self):
+        messagebox.showinfo(
+            "Info",
+            "Function is not work"
+        )
