@@ -1,5 +1,5 @@
 class Language:
-    en = {
+    __language_en = {
     "translating": "Translating...",
     "error": "Error",
     "error_auto": "You cannot set a translatable language in auto!",
@@ -13,7 +13,7 @@ class Language:
     "button_switch_lang": "Switch lang"
     }
 
-    ru = {
+    __language_ru = {
         "translating": "Перевод...",
         "error": "Ошибка",
         "error_auto": "Вы не можете установить язык перевода в автоматическом режиме!",
@@ -27,12 +27,19 @@ class Language:
         "button_switch_lang": "Сменить язык"
     }
 
+    def __init__(self) -> None:
+        self.languages = {
+            'en': self.__language_en,
+            'ru': self.__language_ru
+        }
+        self.selected_language = None
 
-    language_ = "ru"
+    def set_language(self, language: str) -> None:
+        if language in self.languages.keys():
+            self.selected_language = language
 
-    if language_ == "en":
-        language = en
-    elif language_ == "ru":
-        language = ru
-    else:
-        exit("Language is not valid. Set language in config")
+    def get_string(self, translate_key: str) -> str | None:
+        if translate_key in self.languages[self.selected_language]:
+            return self.languages[self.selected_language][translate_key]
+        else: 
+            return 
