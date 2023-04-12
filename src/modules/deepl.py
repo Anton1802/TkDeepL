@@ -93,8 +93,12 @@ class DeepL:
             try:
                 page.get_by_role("main")
             except PlaywrightError as e:
-                msg = f"{language['error_limit_maybe']} ({self.timeout} ms)"
-                raise DeepLPageError(msg) from e
+                # msg = f"{language['error_limit_maybe']} ({self.timeout} ms)"
+                # raise DeepLPageError(msg) from e
+                messagebox.showinfo(
+                        language['error'], 
+                        language['error_limit_maybe']
+                        )
 
             try:
                 await page.wait_for_function(
@@ -104,8 +108,12 @@ class DeepL:
                 """,
                 )
             except PlaywrightError as e:
-                msg = f"{language['error_limit']} ({self.timeout} ms)"
-                raise DeepLPageError(msg) from e
+                # msg = f"{language['error_limit']} ({self.timeout} ms)"
+                # raise DeepLPageError(msg) from e
+                messagebox.showinfo(
+                        language['error'], 
+                        language['error_limit']
+                        )
             
             input_textbox = page.get_by_role("region", name="Source text").locator("d-textarea")
             output_textbox = page.get_by_role("region", name="Translation results").locator("d-textarea")
