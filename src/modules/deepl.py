@@ -4,6 +4,7 @@ from typing import Any
 from install_playwright import install
 from playwright._impl._api_types import Error as PlaywrightError
 from playwright.async_api import async_playwright
+from .app import messagebox
 
 class DeepLError(Exception):
     pass
@@ -67,7 +68,8 @@ class DeepL:
                 browser = await self.__get_browser(p)
             except PlaywrightError as e:
                 if "Executable doesn't exist at" in e.message:
-                    print("Installing browser executable. This may take some time.")  # noqa: T201
+                    # print("Installing browser executable. This may take some time.")  # noqa: T201
+                    messagebox.showinfo("Install", "Installing browser executable. This may take some time")
                     await asyncio.get_event_loop().run_in_executor(None, install, p.chromium)
                     browser = await self.__get_browser(p)
                 else:
