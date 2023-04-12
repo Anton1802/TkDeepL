@@ -4,6 +4,7 @@ from tkinter import messagebox
 from modules.deepl import DeepL
 import asyncio
 from libs.async_tkinter_loop import async_handler
+from languages import language
 
 class TextFieldNull(Exception):
     pass
@@ -52,7 +53,7 @@ class App(tk.Tk):
         self.progress_bar_value = tk.IntVar(value=0)
         self.fr_label = ttk.Combobox(values=list(self.fr_languages.keys()), textvariable=self.fr_language)
         self.to_label = ttk.Combobox(values=list(self.to_languages.keys()), textvariable=self.to_language)
-        self.translating_label = tk.Label(text="Translating...")
+        self.translating_label = tk.Label(text=language['translating'])
 
         self.btn_language_reverse = tk.Button(
             self, 
@@ -61,7 +62,7 @@ class App(tk.Tk):
         )
         self.btn_translate = tk.Button(
             self, 
-            text="Translate", 
+            text=language['button_translate'], 
             command=async_handler(self.translate)
         )
         self.fr_text = tk.Text(wrap="word")
@@ -82,8 +83,8 @@ class App(tk.Tk):
             self.to_language.set(temp)
         else:
             messagebox.showerror(
-                "Error",
-                "You cannot set a translatable language in auto!"
+                language['error'],
+                language['error_valid_lang']
             )
 
     async def translate(self):
@@ -94,7 +95,10 @@ class App(tk.Tk):
             if len(input_text_field) <= 1:
                 raise TextFieldNull
         except TextFieldNull:
-            messagebox.showerror("Error", "The input field is empty!")
+            messagebox.showerror(
+                language['error'], 
+                language['error_input']
+                )
             return
 
         fr_language = self.fr_languages[self.fr_language.get()]

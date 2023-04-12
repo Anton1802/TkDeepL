@@ -5,6 +5,7 @@ from install_playwright import install
 from playwright._impl._api_types import Error as PlaywrightError
 from playwright.async_api import async_playwright
 from .app import messagebox
+from languages import language
 
 class DeepLError(Exception):
     pass
@@ -48,9 +49,9 @@ class DeepL:
 
     def __init__(self, fr_lang: str, to_lang: str, timeout: int = 15000) -> None:
         if fr_lang not in self.fr_langs:
-            raise DeepLError(f"{repr(fr_lang)} is not valid language. Valid language:\n" + repr(self.fr_langs))
+            raise DeepLError(f"{repr(fr_lang)} {language['error_valid_lang']}\n" + repr(self.fr_langs))
         if to_lang not in self.to_langs:
-            raise DeepLError(f"{repr(to_lang)} is not valid language. Valid language:\n" + repr(self.to_langs))
+            raise DeepLError(f"{repr(to_lang)} {language['error_valid_lang']}\n" + repr(self.to_langs))
         
         self.fr_lang = fr_lang
         self.to_lang = to_lang
@@ -69,7 +70,10 @@ class DeepL:
             except PlaywrightError as e:
                 if "Executable doesn't exist at" in e.message:
                     # print("Installing browser executable. This may take some time.")  # noqa: T201
-                    messagebox.showinfo("Install", "Installing browser executable. This may take some time")
+                    messagebox.showinfo(
+                        language['install'], 
+                        language['install_browser']
+                        )
                     await asyncio.get_event_loop().run_in_executor(None, install, p.chromium)
                     browser = await self.__get_browser(p)
                 else:
@@ -89,7 +93,7 @@ class DeepL:
             try:
                 page.get_by_role("main")
             except PlaywrightError as e:
-                msg = f"Maybe Time limit exceeded. ({self.timeout} ms)"
+                msg = f"{language['error_limit_maybe']} ({self.timeout} ms)"
                 raise DeepLPageError(msg) from e
 
             try:
@@ -100,7 +104,7 @@ class DeepL:
                 """,
                 )
             except PlaywrightError as e:
-                msg = f"Time limit exceeded. ({self.timeout} ms)"
+                msg = f"{language['error_limit']} ({self.timeout} ms)"
                 raise DeepLPageError(msg) from e
             
             input_textbox = page.get_by_role("region", name="Source text").locator("d-textarea")
