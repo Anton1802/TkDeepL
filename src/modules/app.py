@@ -6,9 +6,8 @@ import asyncio
 from libs.async_tkinter_loop import async_handler
 from .languages import Language
 from modules.deepl import DeepLPageError
+from errors import TextFieldNull
 
-class TextFieldNull(Exception):
-    pass
 
 class App(tk.Tk):
     fr_languages = {
