@@ -154,7 +154,7 @@ class App(tk.Tk):
                 continue_switch = language
                 break
 
-        self.multi_translator.set_language(language)
+        self.multi_translator.set_language(continue_switch)
         
         self.translating_label.config(text=self.multi_translator.get_string('translating'))
         self.btn_translate.config(text=self.multi_translator.get_string('button_translate'))
