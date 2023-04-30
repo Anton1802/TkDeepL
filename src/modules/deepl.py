@@ -63,7 +63,7 @@ class DeepL:
             except PlaywrightError as e:
                 if "Executable doesn't exist at" in e.message:
                     print("Installing browser executable. This may take some time.")  # noqa: T201
-                    await asyncio.get_event_loop().run_in_executor(None, install, p.chromium)
+                    await asyncio.get_event_loop().run_in_executor(None, install, p.firefox)
                     browser = await self.__get_browser(p)
                 else:
                     raise       
@@ -110,7 +110,7 @@ class DeepL:
             return res.rstrip("\n")
         
     async def __get_browser(self, p: Any) -> Any:
-        return await p.chromium.launch(
+        return await p.firefox.launch(
             headless=True,
             args=[
                 "--no-sandbox",
