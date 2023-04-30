@@ -5,8 +5,7 @@ from modules.deepl import DeepL
 import asyncio
 from libs.async_tkinter_loop import async_handler
 from .languages import Language
-from modules.deepl import DeepLPageError
-from errors import TextFieldNull
+from modules.errors import DeepLPageError, TextFieldNull
 
 
 class App(tk.Tk):
