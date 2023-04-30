@@ -50,7 +50,7 @@ class DeepL:
         self.to_lang = to_lang
         self.translated_fr_lang: str | None = None
         self.translated_to_lang: str | None = None
-        self.max_lenght = 5000
+        self.max_lenght = 3000
         self.timeout = timeout    
 
     async def translate(self, string: str):
@@ -77,8 +77,9 @@ class DeepL:
                 lambda route: route.abort() if route.request.resource_type in excluded_resources else route.continue_(),
             )
             
+            url = "https://www.deepl.com/en/translator"
             try:
-                await page.goto(f"https://www.deepl.com/en/translator#{self.fr_lang}/{self.to_lang}/{string}")
+                await page.goto(f"{url}#{self.fr_lang}/{self.to_lang}/{string}")
                 page.get_by_role("main")
             except PlaywrightError as e:
                 msg = f"Maybe Time limit exceeded. ({self.timeout} ms)"
