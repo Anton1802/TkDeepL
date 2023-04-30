@@ -4,12 +4,7 @@ from typing import Any
 from install_playwright import install
 from playwright._impl._api_types import Error as PlaywrightError
 from playwright.async_api import async_playwright
-
-class DeepLError(Exception):
-    pass
-
-class DeepLPageError(Exception):
-    pass
+from errors import DeepLError, DeepLPageError
 
 class DeepL:
     fr_langs = {
