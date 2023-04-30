@@ -113,7 +113,7 @@ class App(tk.Tk):
         fr_language = self.fr_languages[self.fr_language.get()]
         to_language = self.to_languages[self.to_language.get()]
 
-        t = DeepL(fr_lang=fr_language, to_lang=to_language)
+        t = DeepL(fr_lang=fr_language, to_lang=to_language, timeout=30000)
         timeout_ms = t.timeout
 
         self.progress_bar_translate = ttk.Progressbar(
@@ -154,7 +154,7 @@ class App(tk.Tk):
                 continue_switch = language
                 break
 
-        self.multi_translator.set_language(language)
+        self.multi_translator.set_language(continue_switch)
         
         self.translating_label.config(text=self.multi_translator.get_string('translating'))
         self.btn_translate.config(text=self.multi_translator.get_string('button_translate'))

@@ -1,10 +1,11 @@
 import asyncio
 from typing import Any
+import textwrap
 
 from install_playwright import install
 from playwright._impl._api_types import Error as PlaywrightError
 from playwright.async_api import async_playwright
-from modules.errors import DeepLError, DeepLPageError
+from .errors import DeepLError, DeepLPageError
 
 class DeepL:
     fr_langs = {
@@ -51,7 +52,13 @@ class DeepL:
         self.translated_fr_lang: str | None = None
         self.translated_to_lang: str | None = None
         self.max_lenght = 3000
-        self.timeout = timeout    
+        self.timeout = timeout
+        self.common_text = ""   
+
+    async def __async_generator_split(self, string: str):
+        buffer = textwrap.wrap(string, width=self.max_lenght, break_long_words=False)
+        for line in buffer:
+            yield line
 
     async def translate(self, string: str):
         return await self.__translate(string)
@@ -76,38 +83,41 @@ class DeepL:
                 "**/*",
                 lambda route: route.abort() if route.request.resource_type in excluded_resources else route.continue_(),
             )
-            
-            url = "https://www.deepl.com/en/translator"
-            try:
-                await page.goto(f"{url}#{self.fr_lang}/{self.to_lang}/{string}")
-                page.get_by_role("main")
-            except PlaywrightError as e:
-                msg = f"Maybe Time limit exceeded. ({self.timeout} ms)"
-                raise DeepLPageError(msg) from e
 
-            try:
-                await page.wait_for_function(
-                    """
-                    () => document.querySelector(
-                    'd-textarea[data-testid=translator-target-input]')?.value?.length > 0
-                """,
-                )
-            except PlaywrightError as e:
-                msg = f"Time limit exceeded. ({self.timeout} ms)"
-                raise DeepLPageError(msg) from e
-            
-            input_textbox = page.get_by_role("region", name="Source text").locator("d-textarea")
-            output_textbox = page.get_by_role("region", name="Translation results").locator("d-textarea")
+            async for line in self.__async_generator_split(string=string):
+                url = "https://www.deepl.com/en/translator"
+                try:
+                    await page.goto(f"{url}#{self.fr_lang}/{self.to_lang}/{line}")
+                    page.get_by_role("main")
+                except PlaywrightError as e:
+                    msg = f"Maybe Time limit exceeded. ({self.timeout} ms)"
+                    raise DeepLPageError(msg) from e
 
-            self.translated_fr_lang = str(await input_textbox.get_attribute("lang")).split("-")[0]
-            self.translated_to_lang = str(await output_textbox.get_attribute("lang")).split("-")[0]
+                try:
+                    await page.wait_for_function(
+                        """
+                        () => document.querySelector(
+                        'd-textarea[data-testid=translator-target-input]')?.value?.length > 0
+                    """,
+                    )
+                except PlaywrightError as e:
+                    msg = f"Time limit exceeded. ({self.timeout} ms)"
+                    raise DeepLPageError(msg) from e
+                
+                input_textbox = page.get_by_role("region", name="Source text").locator("d-textarea")
+                output_textbox = page.get_by_role("region", name="Translation results").locator("d-textarea")
 
-            res = str((await output_textbox.all_inner_texts())[0])
-            res = res.replace("\n\n", "\n")
+                self.translated_fr_lang = str(await input_textbox.get_attribute("lang")).split("-")[0]
+                self.translated_to_lang = str(await output_textbox.get_attribute("lang")).split("-")[0]
+
+                res = str((await output_textbox.all_inner_texts())[0])
+                res = res.replace("\n\n", "\n")
+
+                self.common_text += f"{res}\n"
 
             await browser.close()
 
-            return res.rstrip("\n")
+            return self.common_text
         
     async def __get_browser(self, p: Any) -> Any:
         return await p.firefox.launch(
@@ -118,6 +128,5 @@ class DeepL:
                 "--disable-dev-shm-usage",
                 "--disable-gpu",
                 "--no-zygote",
-                "--window-size=1920,1080",
             ],
         )
