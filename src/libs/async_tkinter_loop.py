@@ -10,6 +10,7 @@ async def main_loop(root: tkinter.Tk, title: str) -> None:
     """
     An asynchronous implementation of tkinter mainloop
     :param root: tkinter root object
+    :param title: tkinter title root
     :return: nothing
     """
     while True:
