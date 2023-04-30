@@ -121,7 +121,7 @@ class DeepL:
         
     async def __get_browser(self, p: Any) -> Any:
         return await p.firefox.launch(
-            headless=False,
+            headless=True,
             args=[
                 "--no-sandbox",
                 "--single-process",
