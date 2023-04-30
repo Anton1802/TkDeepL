@@ -113,7 +113,7 @@ class App(tk.Tk):
         fr_language = self.fr_languages[self.fr_language.get()]
         to_language = self.to_languages[self.to_language.get()]
 
-        t = DeepL(fr_lang=fr_language, to_lang=to_language)
+        t = DeepL(fr_lang=fr_language, to_lang=to_language, timeout=30000)
         timeout_ms = t.timeout
 
         self.progress_bar_translate = ttk.Progressbar(
