@@ -43,7 +43,7 @@ class App(tk.Tk):
     to_languages = fr_languages.copy()
     to_languages.pop("Auto")
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.geometry("640x480")
 
@@ -84,7 +84,9 @@ class App(tk.Tk):
         self.btn_translate.pack(anchor="s", side="bottom", expand=True, fill="x", pady=100)
         self.btn_switch_language.place(anchor="se", relx=1, rely=1)
 
-    async def reverse_language(self):
+        self.__process_install = False
+
+    async def reverse_language(self) -> None:
         temp = self.fr_language.get()
         
         if temp in self.to_languages:
@@ -96,7 +98,7 @@ class App(tk.Tk):
                 self.multi_translator.get_string('error_auto')
             )
 
-    async def translate(self):
+    async def translate(self) -> None:
         self.to_text.delete(1.0, "end")
 
         try:
@@ -113,7 +115,7 @@ class App(tk.Tk):
         fr_language = self.fr_languages[self.fr_language.get()]
         to_language = self.to_languages[self.to_language.get()]
 
-        t = DeepL(fr_lang=fr_language, to_lang=to_language, timeout=30000)
+        t = DeepL(fr_lang=fr_language, to_lang=to_language, timeout=60000)
         timeout_ms = t.timeout
 
         self.progress_bar_translate = ttk.Progressbar(
@@ -122,10 +124,24 @@ class App(tk.Tk):
             maximum=float(timeout_ms)
         )
 
+        if not await t.check_browser_install():
+            messagebox.showinfo(
+                self.multi_translator.get_string('install'), 
+                self.multi_translator.get_string('install_browser')
+            )
+            if not self.__process_install:
+                self.__process_install = True
+                if await t.install_browser():
+                    messagebox.showinfo(
+                        self.multi_translator.get_string('install'),
+                        self.multi_translator.get_string('install_browser_success')
+                    )
+            return 
+
         self.progress_bar_translate.place(anchor="center", relx=0.5, rely=0.6)
         self.translating_label.place(anchor="center", relx=0.5, rely=0.65)
 
-        task = asyncio.create_task(self.activate_progress_bar(timeout_ms))
+        task_active_progress_bar = asyncio.create_task(self.activate_progress_bar(timeout_ms))
 
         try:
             translate_text = await t.translate(input_text_field)
@@ -137,16 +153,16 @@ class App(tk.Tk):
         self.translating_label.place_forget()
         self.progress_bar_translate.place_forget()
         self.progress_bar_value.set(0)
-        task.cancel()
+        task_active_progress_bar.cancel()
 
-    async def activate_progress_bar(self, timeout_ms: int):
+    async def activate_progress_bar(self, timeout_ms: int) -> None:
         for _ in range(timeout_ms//1000):
             value = self.progress_bar_value.get()
             value += 1000
             self.progress_bar_value.set(value)
             await asyncio.sleep(1)
 
-    async def switch_language(self):
+    async def switch_language(self) -> None:
         continue_switch = None
 
         for language in self.multi_translator.get_languages():

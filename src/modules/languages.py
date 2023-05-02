@@ -10,7 +10,8 @@ class Language:
     "button_translate": "Translate",
     "install": "Install",
     "install_browser": "Installing browser executable. This may take some time",
-    "button_switch_lang": "Switch lang"
+    "install_browser_success": "Browser installed!",
+    "button_switch_lang": "Switch lang",
     }
 
     __language_ru = {
@@ -24,7 +25,7 @@ class Language:
         "button_translate": "Перевести",
         "install": "Загрузка",
         "install_browser": "Установка исполняемого файла браузера. Это может занять некоторое время",
-        "button_switch_lang": "Сменить язык"
+        "button_switch_lang": "Сменить язык",
     }
 
     def __init__(self) -> None:
