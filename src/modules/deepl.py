@@ -55,25 +55,35 @@ class DeepL:
         self.timeout = timeout
         self.common_text = ""   
 
-    async def __async_generator_split(self, string: str):
+    async def __async_generator_split(self, string: str) -> str | None:
         buffer = textwrap.wrap(string, width=self.max_lenght, break_long_words=False)
         for line in buffer:
             yield line
 
-    async def translate(self, string: str):
+    async def translate(self, string: str) -> str | None:
         return await self.__translate(string)
-
-    async def __translate(self, string: str):
+    
+    async def install_browser(self) -> bool:
+        async with async_playwright() as p:
+            code = await asyncio.get_event_loop().run_in_executor(None, install, p.firefox)
+            if code:
+                return True
+            else:
+                return False
+                
+    async def check_browser_install(self) -> bool:
         async with async_playwright() as p:
             try:
-                browser = await self.__get_browser(p)
+                await self.__get_browser(p)
             except PlaywrightError as e:
                 if "Executable doesn't exist at" in e.message:
-                    print("Installing browser executable. This may take some time.")  # noqa: T201
-                    await asyncio.get_event_loop().run_in_executor(None, install, p.firefox)
-                    browser = await self.__get_browser(p)
-                else:
-                    raise       
+                    return False
+            else:
+                return True
+
+    async def __translate(self, string: str) -> Any:
+        async with async_playwright() as p:            
+            browser = await self.__get_browser(p)
 
             page = await browser.new_page()
             page.set_default_timeout(self.timeout)
