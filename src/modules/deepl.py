@@ -65,7 +65,7 @@ class DeepL:
     
     async def install_browser(self) -> bool:
         async with async_playwright() as p:
-            code = await asyncio.get_event_loop().run_in_executor(None, install, p.firefox)
+            code = await asyncio.get_event_loop().run_in_executor(None, install, p.chromium)
             if code:
                 return True
             else:
@@ -130,7 +130,7 @@ class DeepL:
             return self.common_text
         
     async def __get_browser(self, p: Any) -> Any:
-        return await p.firefox.launch(
+        return await p.chromium.launch(
             headless=True,
             args=[
                 "--no-sandbox",
